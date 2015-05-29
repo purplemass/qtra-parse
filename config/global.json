@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.4.2"
+  },
+  "applications": {
+    "Kin Test App": {
+      "applicationId": "GIm4OTBES61ztfbUQU4SVbb1rirVsws2k0aGV1c3",
+      "masterKey": "YnweTRLbk3QLTpTQ5iHLievV9M4djoxzCN3CTKMi"
+    },
+    "_default": {
+      "link": "Kin Test App"
+    }
+  }
+}

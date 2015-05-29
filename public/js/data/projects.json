@@ -1,0 +1,29 @@
+[
+  {
+    "id": 0,
+    "name": "Project Name 1",
+    "lastText": "Project description 1",
+    "icon": "ion-ios-briefcase",
+    "trees": [
+      { "id": 0, "name": "T1-1" },
+      { "id": 1, "name": "T1-2" },
+      { "id": 2, "name": "T1-3" }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "Project Name 2",
+    "lastText": "Project description 2",
+    "icon": "ion-ios-briefcase",
+    "trees": [
+      { "id": 0, "name": "T2-1" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Project Name 3",
+    "lastText": "Project description 3",
+    "icon": "ion-ios-briefcase",
+    "trees": []
+  }
+]
