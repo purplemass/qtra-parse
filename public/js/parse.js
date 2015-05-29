@@ -12,6 +12,7 @@ function parseLogin(username, password, listProjects) {
       if (result === false) {
         logIt("parseLogin: could not login");
       } else {
+        // logIt(result);
         parseLoginActual(username, password, listProjects);
       }
     },
