@@ -3,9 +3,9 @@ Parse.Cloud.define("getSecretKeyCC", function(request, response) {
   var shasum = crypto.createHash('sha1');
 
   Parse.Config.get().then(function(config) {
-    var qtraSecretKey = config.get("qtraSecretKey");
-    qtraSecretKey = crypto.createHash('sha1').update(qtraSecretKey).digest("hex");
-    response.success(qtraSecretKey);
+    var qsk = config.get("qtraSecretKey");
+    qsk = crypto.createHash('sha1').update(qsk).digest("hex");
+    response.success(qsk);
   }, function(error) {
     response.error(error);
   });
@@ -17,15 +17,22 @@ Parse.Cloud.define("parseLoginCC", function(request, response) {
 
   Parse.Cloud.run('getSecretKeyCC', {}, {
     success: function(result) {
+      var qsk = result;
       var data_to_send = {
-        'qtraSecretKey': result,
+        'qsk': qsk,
         'username': username,
         'password': password
       };
 
       Parse.Cloud.run('testLoginWebHook', data_to_send, {
         success: function(result) {
-          response.success(result);
+          if (result.qsk === undefined) {
+            response.error("missing key");
+          } else if (result.qsk !== qsk) {
+            response.error("incorrect key");
+          } else {
+            response.success(result);
+          }
         },
         error: function(error) {
           response.error(error);

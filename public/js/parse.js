@@ -27,11 +27,10 @@ function parseLogin(username, password, listProjects) {
   Parse.Cloud.run('parseLoginCC', data_to_send, {
     success: function(result) {
       logIt("parseLogin: success");
-      logIt(result);
-      if (result !== false) {
-        parseLoginActual(username, password, listProjects);
+      if (result === false) {
+        logIt("parseLogin: could not login");
       } else {
-        logIt("parseLogin: could not login to qtra.co.uk");
+        parseLoginActual(username, password, listProjects);
       }
     },
     error: function(error) {
@@ -133,7 +132,7 @@ function parseAddProject() {
 
 // parseGetProjects();
 
-parseLogin('bob', 'bob1', true);
+parseLogin('bob', 'bob', false);
 // parseLogin('pop', 'pop', true);
 // parseLogin('oliver', 'oliver', true);
 
