@@ -30,8 +30,16 @@ Parse.Cloud.define("parseLoginCC", function(request, response) {
             response.error("missing key");
           } else if (result.qsk !== qsk) {
             response.error("incorrect key");
+          } else if (result.expirydate === undefined) {
+            response.error("expiry missing");
           } else {
-            response.success(result);
+            var expirydate = new Date(result.expirydate);
+            var now = new Date();
+            if (expirydate < now) {
+              response.error("user expired");
+            } else {
+              response.success(result.expirydate);
+            }
           }
         },
         error: function(error) {

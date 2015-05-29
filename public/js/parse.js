@@ -12,7 +12,7 @@ function parseLogin(username, password, listProjects) {
       if (result === false) {
         logIt("parseLogin: could not login");
       } else {
-        // logIt(result);
+        logIt(result);
         parseLoginActual(username, password, listProjects);
       }
     },
@@ -55,7 +55,7 @@ function parseGetProjects() {
         logIt(object.get('name'));
       }
 
-      parseAddProject();
+      // parseAddProject();
       // parseGetProject("jkWGgVrBjx"); // Bob's
       // parseGetProject("JXFFocBbB0"); // Pop's
       // parseGetProject("nneYfLDCd1"); // Oliver's
@@ -125,6 +125,6 @@ function logIt(str) {
       logIt(currentUser.attributes);
 */
 
-parseLogin('bob', 'bob', false);
+parseLogin('bob', 'bob', true);
 // parseLogin('pop', 'pop', true);
 // parseLogin('oliver', 'oliver', true);

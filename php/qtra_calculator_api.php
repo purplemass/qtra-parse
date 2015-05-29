@@ -12,20 +12,20 @@ define("QTRA_SECRET_KEY", "hcd30l8#t8b)o57tyuo417!ullc5g60c!%s+my0pY7e)fvy=br");
  * param  String username
  * param  String password
  * return false for invalid users
- * return expiray-date of user in an array e.g. array('expiry-date' => '2020-01-01')
+ * return expiray-date of user in an array e.g. array('expirydate' => '2020-01-01')
  */
 function validateUser($username, $password) {
     if (empty($username) OR empty($password)) return false;
 
     // access database with $username/$password to return:
-    // - expiray-date for valid users as an array: array('expiry-date' =>'YYYY-MM-DD')
+    // - expiray-date for valid users as an array: array('expirydate' =>'YYYY-MM-DD')
     // - false if users are not valid which is returned if:
     //   - username doesn't exist in the database
     //   - password is incorrect
     //   - password or username are empty (this is caught above)
     //
-    // note: if a user's expiry-date is in the past, return the result
-    // as normal with the corrcet expiry-date, the client will log the
+    // note: if a user's expirydate is in the past, return the result
+    // as normal with the corrcet expirydate, the client will log the
     // user out and display error messages
 
     /*********************************************************************
@@ -37,25 +37,25 @@ function validateUser($username, $password) {
         array(
             'user' => 'oliver',
             'password' => 'oliver',
-            'expiry-date' => '2016-01-01'
+            'expirydate' => '2016-01-01'
         ),
         // valid user - limited time
         array(
             'user' => 'bob',
             'password' => 'bob',
-            'expiry-date' => '2015-06-30'
+            'expirydate' => '2015-06-30'
         ),
         // valid user - expired already
         array(
             'user' => 'pop',
             'password' => 'pop',
-            'expiry-date' => '2015-05-01'
+            'expirydate' => '2015-05-01'
         ),
     );
 
     foreach ($mock_database as $record_in_db) {
         if ($record_in_db['user'] == $username AND $record_in_db['password'] == $password) {
-            return array('expiry-date' => $record_in_db['expiry-date']);
+            return array('expirydate' => $record_in_db['expirydate']);
         }
     }
 
