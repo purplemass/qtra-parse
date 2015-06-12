@@ -130,8 +130,6 @@ function checkInput() {
     if ( ! isset($json_data['username'])) return false;
     if ( ! isset($json_data['password'])) return false;
 
-return $json_data;
-
     // check secret key here
     if ($json_data['qsk'] == convertqsk()) {
         $ret = $json_data;
