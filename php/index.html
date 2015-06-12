@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>QTRA: Test PHP API</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+        function submitForm() {
+            formData = {
+                'username': $('#username').val(),
+                'password': $('#password').val(),
+                'qsk': $('#qsk').val(),
+            }
+            formData = { 'params': formData }
+            formData = JSON.stringify(formData);
+            // console.log(formData);
+
+            $.ajax({
+                type: "POST",
+                url: "qtra_calculator_api.php",
+                data: formData,
+                success: function(data){
+                    console.log(data.success);
+                },
+                error: function(error, errorCode, pp){
+                    console.log(error);
+                    console.log(errorCode);
+                    console.log(pp);
+                },
+                dataType: "json",
+                contentType : "application/json"
+            });
+        }
+    </script>
+</head>
+<body onLoad="submitForm()">
+    <h2>QTRA: Test PHP API</h2>
+    <form id="myForm">
+        <input type="text" name="username" id="username" value="bob">
+        <br>
+        <input type="password" name="password" id="password" value="bob">
+        <br><br>
+        <input type="button" value="Submit" onClick="submitForm()">
+        <input type="hidden" name="qsk" id="qsk" value="hcd30l8#t8b)o57tyuo417!ullc5g60c!%s+my0pY7e)fvy=br">
+    </form>
+</body>
+</html>
