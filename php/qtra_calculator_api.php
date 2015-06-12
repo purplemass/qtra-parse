@@ -9,10 +9,10 @@ define("QTRA_SECRET_KEY", "hcd30l8#t8b)o57tyuo417!ullc5g60c!%s+my0pY7e)fvy=br");
 /**
  * Validate user
  *
- * param  String username
- * param  String password
- * return false for invalid users
- * return expiray-date of user in an array e.g. array('expirydate' => '2020-01-01')
+ * @param  String username
+ * @param  String password
+ * @return false for invalid users
+ * @return expiray-date of user in an array e.g. array('expirydate' => '2020-01-01')
  */
 function validateUser($username, $password) {
     if (empty($username) OR empty($password)) return false;
@@ -84,7 +84,15 @@ function runApp() {
         }
     }
 
-    // return json to client
+    writeJSON($response);
+}
+
+/**
+ * Returns json to client
+ *
+ * @param  String username
+ */
+function writeJSON($response) {
     $response = array('success' => $response);
     header('Content-type: application/json');
     exit(json_encode($response));
@@ -121,6 +129,8 @@ function checkInput() {
     if ( ! isset($json_data['qsk'])) return false;
     if ( ! isset($json_data['username'])) return false;
     if ( ! isset($json_data['password'])) return false;
+
+return $json_data;
 
     // check secret key here
     if ($json_data['qsk'] == convertqsk()) {
