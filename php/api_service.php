@@ -38,28 +38,47 @@ function validateUser($username, $password) {
         array(
             'user' => 'oliver',
             'password' => 'oliver',
+            'can_access_calculator' => true,
             'expirydate' => '2016-01-01'
         ),
         // valid user - limited time
         array(
             'user' => 'bob',
             'password' => 'bob',
+            'can_access_calculator' => true,
             'expirydate' => '2015-07-30'
         ),
-        // valid user - expired already
+        // invalid user - expired already
         array(
-            'user' => 'test',
-            'password' => 'test',
-            'expirydate' => '2015-05-01'
+            'user' => 'expired',
+            'password' => 'expired',
+            'can_access_calculator' => true,
+            'expirydate' => '2015-01-01'
+        ),
+        // invalid user - should not have access
+        array(
+            'user' => 'invalid',
+            'password' => 'invalid',
+            'can_access_calculator' => false,
+            'expirydate' => '2017-01-01'
         ),
     );
 
     foreach ($mock_database as $record_in_db) {
-        if ($record_in_db['user'] == $username AND $record_in_db['password'] == $password) {
-            return array(
-                'statusCode' => 200,
-                'data' => $record_in_db['expirydate']
-            );
+        if ($record_in_db['user'] == $username AND
+                $record_in_db['password'] == $password) {
+
+            if ($record_in_db['can_access_calculator']) {
+                return array(
+                    'statusCode' => 200,
+                    'data' => $record_in_db['expirydate']
+                );
+            } else {
+                return array(
+                    'statusCode' => 403,
+                    'data' => "no access allowed"
+                );
+            }
         }
     }
 
