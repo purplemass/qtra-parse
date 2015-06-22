@@ -20,12 +20,22 @@
                 url: "qtra_calculator_api.php",
                 data: formData,
                 success: function(data){
-                    console.log(data.success);
+                    var expirydate = data.success.expirydate;
+                    if (data.success === false) {
+                        $(".message").text("Error: could not login");
+                        $(".message").css("color", "red")
+                    } else {
+                        $(".message").text("Sucess: " + expirydate);
+                        $(".message").css("color", "green")
+                    }
+                    console.log(data);
                 },
-                error: function(error, errorCode, pp){
+                error: function(error, errorCode, errorMessage){
                     console.log(error);
                     console.log(errorCode);
-                    console.log(pp);
+                    console.log(errorMessage);
+                    $(".message").text("Error ["+error.status+"]: " + error.statusText);
+                    $(".message").css("color", "red")
                 },
                 dataType: "json",
                 contentType : "application/json"
@@ -42,6 +52,10 @@
         <br><br>
         <input type="button" value="Submit" onClick="submitForm()">
         <input type="hidden" name="qsk" id="qsk" value="cf4298e4674118e979e72d83a133ec04feb6cf5a">
+        <br>
+        <br>
+        <div class="message"></div>
+        <br>
     </form>
 </body>
 </html>
