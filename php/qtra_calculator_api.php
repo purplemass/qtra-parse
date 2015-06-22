@@ -1,10 +1,13 @@
 <?PHP
 
-// QTRA_SECRET_KEY should be in a separate file not in the root of
+// QTRA_SECRET_KEY/DEBUG should be in a separate file not in the root of
 // the webserver and included here instead as follows:
 // require_once("../inc/qtra_calculator_api_config.php");
 
 define("QTRA_SECRET_KEY", "hcd30l8#t8b)o57tyuo417!ullc5g60c!%s+my0pY7e)fvy=br");
+define("DEBUG", true); // set this to false in production
+
+//-----------------------------------------------------------------------------
 
 /**
  * Validate user
@@ -15,8 +18,6 @@ define("QTRA_SECRET_KEY", "hcd30l8#t8b)o57tyuo417!ullc5g60c!%s+my0pY7e)fvy=br");
  * @return expiray-date of user in an array e.g. array('expirydate' => '2020-01-01')
  */
 function validateUser($username, $password) {
-    if (empty($username) OR empty($password)) return false;
-
     // access database with $username/$password to return:
     // - expiray-date for valid users as an array: array('expirydate' =>'YYYY-MM-DD')
     // - false if users are not valid which is returned if:
@@ -43,23 +44,29 @@ function validateUser($username, $password) {
         array(
             'user' => 'bob',
             'password' => 'bob',
-            'expirydate' => '2015-06-30'
+            'expirydate' => '2015-07-30'
         ),
         // valid user - expired already
         array(
-            'user' => 'pop',
-            'password' => 'pop',
+            'user' => 'test',
+            'password' => 'test',
             'expirydate' => '2015-05-01'
         ),
     );
 
     foreach ($mock_database as $record_in_db) {
         if ($record_in_db['user'] == $username AND $record_in_db['password'] == $password) {
-            return array('expirydate' => $record_in_db['expirydate']);
+            return array(
+                'success' => true,
+                'data' => $record_in_db['expirydate']
+            );
         }
     }
 
-    return false;
+    return array(
+        'success' => false,
+        'data' => "couldn't log in"
+    );
 }
 
 /*********************************************************************
@@ -75,12 +82,14 @@ runApp();
  */
 function runApp() {
     $response = checkInput();
-
-    if ($response !== false) {
-        $response = validateUser($response['username'], $response['password']);
+    if ($response['success'] !== false) {
+        $response = validateUser($response['data']['username'], $response['data']['password']);
         // add QSK to the output
-        if ($response !== false) {
-            $response = array_merge(array('qsk' => convertQSK()), $response);
+        if ($response['success'] !== false) {
+            $response = array_merge(
+                array('qsk' => convertQSK()),
+                array('expirydate' => $response['data'])
+            );
         }
     }
 
@@ -119,23 +128,25 @@ function convertQSK() {
  * @return false for invalid POST parameters
  */
 function checkInput() {
+    $error = false;
+
     // get json data sent by client
     $json_data = json_decode(file_get_contents('php://input'), true);
 
-    if ( ! isset($json_data['params'])) return false;
+    if ( ! isset($json_data['params'])) return array('success' => false, 'data' => "invalid parameters");
 
     $json_data = $json_data['params'];
 
-    if ( ! isset($json_data['qsk'])) return false;
-    if ( ! isset($json_data['username'])) return false;
-    if ( ! isset($json_data['password'])) return false;
+    if ( ! isset($json_data['qsk'])) return array('success' => false, 'data' => "no key");
+    if ( ! isset($json_data['username'])) return array('success' => false, 'data' => "no username");
+    if ( empty($json_data['username'])) return array('success' => false, 'data' => "no username");
+    if ( ! isset($json_data['password'])) return array('success' => false, 'data' => "no password");
+    if ( empty($json_data['password'])) return array('success' => false, 'data' => "no password");
 
     // check secret key here
     if ($json_data['qsk'] == convertqsk()) {
-        $ret = $json_data;
+        return array('success' => true, 'data' => $json_data);
     } else {
-        $ret = false;
+        return array('success' => false, 'data' => "invalid key");
     }
-
-    return $ret;
 }

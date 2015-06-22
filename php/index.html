@@ -20,22 +20,22 @@
                 url: "qtra_calculator_api.php",
                 data: formData,
                 success: function(data){
-                    var expirydate = data.success.expirydate;
+                    data = data.success;
+                    var expirydate = data.expirydate;
                     if (data.success === false) {
-                        $(".message").text("Error: could not login");
                         $(".message").css("color", "red")
+                        $(".message").text("Error: " + data.data);
                     } else {
-                        $(".message").text("Sucess: " + expirydate);
                         $(".message").css("color", "green")
+                        $(".message").text("Sucess: " + expirydate);
                     }
                     console.log(data);
                 },
                 error: function(error, errorCode, errorMessage){
+                    $(".message").css("color", "red");
                     console.log(error);
-                    console.log(errorCode);
-                    console.log(errorMessage);
-                    $(".message").text("Error ["+error.status+"]: " + error.statusText);
-                    $(".message").css("color", "red")
+                    $(".message").html("Error: code=" + error.status +
+                        " status=" + error.statusText + "<br>Response: " + error.responseText);
                 },
                 dataType: "json",
                 contentType : "application/json"
