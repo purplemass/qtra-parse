@@ -1,79 +1,8 @@
 <?PHP
 
-// QTRA_SECRET_KEY/DEBUG should be in a separate file not in the root of
-// the webserver and included here instead as follows:
-// require_once("../inc/qtra_calculator_api_config.php");
-
-define("QTRA_SECRET_KEY", "hcd30l8#t8b)o57tyuo417!ullc5g60c!%s+my0pY7e)fvy=br");
-define("DEBUG", true); // set this to false in production
-
-//-----------------------------------------------------------------------------
-
-/**
- * Validate user
- *
- * @param  String username
- * @param  String password
- * @return false for invalid users
- * @return expiray-date of user in an array e.g. array('expirydate' => '2020-01-01')
- */
-function validateUser($username, $password) {
-    // access database with $username/$password to return:
-    // - expiray-date for valid users as an array: array('expirydate' =>'YYYY-MM-DD')
-    // - false if users are not valid which is returned if:
-    //   - username doesn't exist in the database
-    //   - password is incorrect
-    //   - password or username are empty (this is caught above)
-    //
-    // note: if a user's expirydate is in the past, return the result
-    // as normal with the corrcet expirydate, the client will log the
-    // user out and display error messages
-    //
-    // note2: use mysql_real_escape_string when needed
-
-    /*********************************************************************
-     * BELOW IS A MOCK-UP OF USER VALIDATION FOR TESTING
-     * REPLACE THE CODE BELOW WITH YOUR CODE TO ACCESS THE DATABASE
-     *********************************************************************/
-    $mock_database = array(
-        // valid user - plenty of time
-        array(
-            'user' => 'oliver',
-            'password' => 'oliver',
-            'expirydate' => '2016-01-01'
-        ),
-        // valid user - limited time
-        array(
-            'user' => 'bob',
-            'password' => 'bob',
-            'expirydate' => '2015-07-30'
-        ),
-        // valid user - expired already
-        array(
-            'user' => 'test',
-            'password' => 'test',
-            'expirydate' => '2015-05-01'
-        ),
-    );
-
-    foreach ($mock_database as $record_in_db) {
-        if ($record_in_db['user'] == $username AND $record_in_db['password'] == $password) {
-            return array(
-                'success' => true,
-                'data' => $record_in_db['expirydate']
-            );
-        }
-    }
-
-    return array(
-        'success' => false,
-        'data' => "couldn't log in"
-    );
-}
-
-/*********************************************************************
- * DO NOT CHANGE ANYTHING BELOW
- *********************************************************************/
+// the config file should be in folder not in the root of the webserver
+require_once("api_config.php");
+require_once("api_service.php");
 
 runApp();
 
