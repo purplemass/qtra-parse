@@ -9,7 +9,8 @@ runApp();
 /**
  * Runs this app
  *
- * exists the reponse returned by the other parts of the app as json
+ * runs checks on user input (POST data), runs database service
+ * returnes JSON response
  */
 function runApp() {
     $response = checkInput();
@@ -17,10 +18,10 @@ function runApp() {
         $response = validateUser($response['data']['username'], $response['data']['password']);
         // add QSK to the output
         if ($response['ok'] !== false) {
-            $response = array_merge(
-                array('ok' => true, 'qsk' => convertQSK()),
-                array('data' => $response['data'])
-            );
+            $response['statusCode'] = 200;
+            $response['qsk'] = convertQSK();
+        } else {
+            $response['statusCode'] = 401;
         }
     }
 
@@ -33,7 +34,9 @@ function runApp() {
  * @param  String username
  */
 function writeJSON($response) {
-    $statusCode= 500;
+    $statusCode = $response['statusCode'];
+    unset($response['statusCode']);
+
     switch ($statusCode) {
         case 200:
             $statusMessage = "OK";
@@ -56,10 +59,6 @@ function writeJSON($response) {
             break;
 
         case 500:
-            $statusMessage = "Internal Server Error";
-            break;
-
-        default:
             $statusMessage = "Internal Server Error";
             break;
     }
@@ -127,39 +126,52 @@ function checkInput() {
     if ( ! isset($json_data['qsk'])) {
         return array(
             'ok' => false,
+            'statusCode' => 400,
             'data' => "no key"
         );
     }
     if ( ! isset($json_data['username'])) {
         return array(
             'ok' => false,
+            'statusCode' => 400,
             'data' => "no username"
         );
     }
     if ( empty($json_data['username'])) {
         return array(
             'ok' => false,
+            'statusCode' => 400,
             'data' => "no username"
         );
     }
     if ( ! isset($json_data['password'])) {
         return array(
             'ok' => false,
+            'statusCode' => 400,
             'data' => "no password"
         );
     }
     if ( empty($json_data['password'])) {
         return array(
             'ok' => false,
+            'statusCode' => 400,
             'data' => "no password"
         );
     }
 
     // check secret key here
     if ($json_data['qsk'] == convertqsk()) {
-        return array('ok' => true, 'data' => $json_data);
+        return array(
+            'ok' => true,
+            'statusCode' => 200,
+            'data' => $json_data
+        );
     } else {
-        return array('ok' => false, 'data' => "invalid key");
+        return array(
+            'ok' => false,
+            'statusCode' => 400,
+            'data' => "invalid key"
+        );
     }
 }
 
