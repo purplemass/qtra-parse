@@ -19,11 +19,9 @@ function runApp() {
             $response['data']['username'],
             $response['data']['password']
         );
-        // add QSK to the output
+        // add qsk to the output for verification by parse.com
         if ($response['statusCode'] === 200) {
             $response['qsk'] = convertQSK();
-        } else {
-            $response['statusCode'] = 401;
         }
     }
 
@@ -56,11 +54,8 @@ function writeJSON($response) {
             $statusMessage = "Forbidden";
             break;
 
-        case 404:
-            $statusMessage = "Not Found";
-            break;
-
-        case 500:
+        default:
+            $statusCode = 500;
             $statusMessage = "Internal Server Error";
             break;
     }
@@ -75,7 +70,10 @@ function writeJSON($response) {
 
     // http_response_code is only supported from PHP 5.4
     // another way is to use header as follows:
-    // header($_SERVER['SERVER_PROTOCOL'] . $statusCode . " " . $statusMessage, true, $statusCode);
+    //
+    // header($_SERVER['SERVER_PROTOCOL'] . $statusCode .
+    //     " " . $statusMessage, true, $statusCode);
+    //
     // but this doesn't always work depending on the server set-up
     //
     http_response_code($statusCode);
@@ -94,60 +92,45 @@ function convertQSK() {
 }
 
 /**
- * Check client's request for valid POST parameters (json)
+ * Check client's request for valid POST parameters (JSON)
+ *
  * Valid POST parameters are:
  *  - username
  *  - password
  *  - qsk
  *
- * @return array with 'ok' set to true/false and 'data' set
- *         to error message or json data
+ * @return array with 'statusCode' set to 200 and 'data' set
+ *         to JSON data otherwise exit with error message
  */
 function checkInput() {
-    $error = false;
+    $response = array('statusCode' => 400);
 
-    // get json data sent by client
-    $json_data = file_get_contents('php://input');
-    $json_data = sanitize($json_data);
+    // get JSON data sent by client
+    $json_data = sanitize(file_get_contents('php://input'));
     $json_data = json_decode($json_data, true);
 
     if ( ! isset($json_data['params'])) {
-        return array(
-            'data' => "invalid parameters"
-        );
+        $response['data'] = "invalid parameters";
+        writeJSON($response);
     }
 
     $json_data = $json_data['params'];
 
     if ( ! isset($json_data['qsk'])) {
-        return array(
-            'statusCode' => 400,
-            'data' => "no key"
-        );
+        $response['data'] = "no key";
+        writeJSON($response);
     }
-    if ( ! isset($json_data['username'])) {
-        return array(
-            'statusCode' => 400,
-            'data' => "no username"
-        );
+
+    if ( ! isset($json_data['username']) OR
+            ! isset($json_data['password'])) {
+        $response['data'] = "no username or password";
+        writeJSON($response);
     }
-    if ( empty($json_data['username'])) {
-        return array(
-            'statusCode' => 400,
-            'data' => "no username"
-        );
-    }
-    if ( ! isset($json_data['password'])) {
-        return array(
-            'statusCode' => 400,
-            'data' => "no password"
-        );
-    }
-    if ( empty($json_data['password'])) {
-        return array(
-            'statusCode' => 400,
-            'data' => "no password"
-        );
+
+    if ( empty($json_data['username']) OR
+            empty($json_data['password'])) {
+        $response['data'] = "no username or password";
+        writeJSON($response);
     }
 
     // check secret key here
@@ -157,10 +140,8 @@ function checkInput() {
             'data' => $json_data
         );
     } else {
-        return array(
-            'statusCode' => 400,
-            'data' => "invalid key"
-        );
+        $response['data'] = "invalid key";
+        writeJSON($response);
     }
 }
 
