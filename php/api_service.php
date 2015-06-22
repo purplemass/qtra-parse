@@ -4,13 +4,13 @@
  * Validate user
  *  access the database with username/password to return array:
  *  - for valid users:
- *    - 'success' set to true
+ *    - 'ok' set to true
  *    - 'data' set to expiray-date (YYYY-MM-DD):
- *       e.g. array('success' => true, 'data => "2016-01-01")
+ *       e.g. array('ok' => true, 'data => "2016-01-01")
  *  - for invalid users:
- *    - 'success' set to false
+ *    - 'ok' set to false
  *    - 'data' set to an error message:
- *       e.g. array('success' => false, 'data => "user doesn't exist")
+ *       e.g. array('ok' => false, 'data => "user doesn't exist")
  *
  *  Invalid users when:
  *     - username doesn't exist in the database
@@ -56,14 +56,14 @@ function validateUser($username, $password) {
     foreach ($mock_database as $record_in_db) {
         if ($record_in_db['user'] == $username AND $record_in_db['password'] == $password) {
             return array(
-                'success' => true,
+                'ok' => true,
                 'data' => $record_in_db['expirydate']
             );
         }
     }
 
     return array(
-        'success' => false,
+        'ok' => false,
         'data' => "couldn't log in"
     );
 }

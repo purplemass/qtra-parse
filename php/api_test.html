@@ -13,7 +13,6 @@
             }
             formData = { 'params': formData }
             formData = JSON.stringify(formData);
-            // console.log(formData);
 
             $.ajax({
                 type: "POST",
@@ -21,13 +20,12 @@
                 data: formData,
                 success: function(data){
                     data = data.success;
-                    var expirydate = data.data;
-                    if (data.success === false) {
+                    if (data.ok === false) {
                         $(".message").css("color", "red")
-                        $(".message").text("Error: " + data.data);
+                        $(".message").html("Error: " + data.data);
                     } else {
                         $(".message").css("color", "green")
-                        $(".message").text("Sucess: " + expirydate);
+                        $(".message").html("Sucess: " + data.data);
                     }
                     console.log(data);
                 },

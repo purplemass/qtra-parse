@@ -13,12 +13,12 @@ runApp();
  */
 function runApp() {
     $response = checkInput();
-    if ($response['success'] !== false) {
+    if ($response['ok'] !== false) {
         $response = validateUser($response['data']['username'], $response['data']['password']);
         // add QSK to the output
-        if ($response['success'] !== false) {
+        if ($response['ok'] !== false) {
             $response = array_merge(
-                array('success' => true, 'qsk' => convertQSK()),
+                array('ok' => true, 'qsk' => convertQSK()),
                 array('data' => $response['data'])
             );
         }
@@ -28,17 +28,62 @@ function runApp() {
 }
 
 /**
- * Returns json to client
+ * Returns JSON to client
  *
  * @param  String username
  */
 function writeJSON($response) {
-    if ( ! DEBUG AND $response['success'] === false) {
-        $response['data'] = 'error message suppressed';
+    $statusCode= 500;
+    switch ($statusCode) {
+        case 200:
+            $statusMessage = "OK";
+            break;
+
+        case 400:
+            $statusMessage = "Bad Request";
+            break;
+
+        case 401:
+            $statusMessage = "Unauthorized";
+            break;
+
+        case 403:
+            $statusMessage = "Forbidden";
+            break;
+
+        case 404:
+            $statusMessage = "Not Found";
+            break;
+
+        case 500:
+            $statusMessage = "Internal Server Error";
+            break;
+
+        default:
+            $statusMessage = "Internal Server Error";
+            break;
     }
 
+    if ( ! DEBUG) {
+        if ($response['ok'] === false) {
+            $response['data'] = 'error message suppressed';
+        }
+        if ($statusCode != 200) {
+            $response = $statusMessage;
+        }
+    }
+
+    // success here is what pasre.com requires the response to be
     $response = array('success' => $response);
     header('Content-type: application/json');
+
+    // http_response_code is only supported from PHP 5.4
+    // the other way is using header:
+    // header($_SERVER['SERVER_PROTOCOL'] . $statusCode . " " . $statusMessage, true, $statusCode);
+    // which doesn't always work depending on the server set-up
+    //
+    http_response_code($statusCode);
+
     exit(json_encode($response));
 }
 
@@ -59,8 +104,8 @@ function convertQSK() {
  *  - password
  *  - qsk
  *
- * @return array of parameters for valid POST parameters
- * @return false for invalid POST parameters
+ * @return array with 'ok' set to true/false and 'data' set
+ *         to error message or json data
  */
 function checkInput() {
     $error = false;
@@ -70,21 +115,51 @@ function checkInput() {
     $json_data = sanitize($json_data);
     $json_data = json_decode($json_data, true);
 
-    if ( ! isset($json_data['params'])) return array('success' => false, 'data' => "invalid parameters");
+    if ( ! isset($json_data['params'])) {
+        return array(
+            'ok' => false,
+            'data' => "invalid parameters"
+        );
+    }
 
     $json_data = $json_data['params'];
 
-    if ( ! isset($json_data['qsk'])) return array('success' => false, 'data' => "no key");
-    if ( ! isset($json_data['username'])) return array('success' => false, 'data' => "no username");
-    if ( empty($json_data['username'])) return array('success' => false, 'data' => "no username");
-    if ( ! isset($json_data['password'])) return array('success' => false, 'data' => "no password");
-    if ( empty($json_data['password'])) return array('success' => false, 'data' => "no password");
+    if ( ! isset($json_data['qsk'])) {
+        return array(
+            'ok' => false,
+            'data' => "no key"
+        );
+    }
+    if ( ! isset($json_data['username'])) {
+        return array(
+            'ok' => false,
+            'data' => "no username"
+        );
+    }
+    if ( empty($json_data['username'])) {
+        return array(
+            'ok' => false,
+            'data' => "no username"
+        );
+    }
+    if ( ! isset($json_data['password'])) {
+        return array(
+            'ok' => false,
+            'data' => "no password"
+        );
+    }
+    if ( empty($json_data['password'])) {
+        return array(
+            'ok' => false,
+            'data' => "no password"
+        );
+    }
 
     // check secret key here
     if ($json_data['qsk'] == convertqsk()) {
-        return array('success' => true, 'data' => $json_data);
+        return array('ok' => true, 'data' => $json_data);
     } else {
-        return array('success' => false, 'data' => "invalid key");
+        return array('ok' => false, 'data' => "invalid key");
     }
 }
 
