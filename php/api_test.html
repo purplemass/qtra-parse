@@ -19,19 +19,13 @@
                 url: "index.php",
                 data: formData,
                 success: function(data){
-                    data = data.success;
-                    if (data.ok === false) {
-                        $(".message").css("color", "red")
-                        $(".message").html("Error: " + data.data);
-                    } else {
-                        $(".message").css("color", "green")
-                        $(".message").html("Sucess: " + data.data);
-                    }
                     console.log(data);
+                    $(".message").css("color", "green")
+                    $(".message").html("Success: " + data.success.data);
                 },
                 error: function(error, errorCode, errorMessage){
-                    $(".message").css("color", "red");
                     console.log(error);
+                    $(".message").css("color", "red");
                     $(".message").html("Error: code=" + error.status +
                         " status=" + error.statusText + "<br>Response: " + error.responseText);
                 },

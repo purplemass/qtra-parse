@@ -2,26 +2,27 @@
 
 /**
  * Validate user
- *  access the database with username/password to return array:
+ *
+ *  Access the database with username/password to return array:
  *  - for valid users:
- *    - 'ok' set to true
+ *    - 'statusCode' set to 200
  *    - 'data' set to expiray-date (YYYY-MM-DD):
- *       e.g. array('ok' => true, 'data => "2016-01-01")
+ *       e.g. array('statusCode' => true, 'data => "2016-01-01")
  *  - for invalid users:
- *    - 'ok' set to false
+ *    - 'statusCode' set to 401 (Unauthorized) or 403 (Forbidden)
  *    - 'data' set to an error message:
- *       e.g. array('ok' => false, 'data => "user doesn't exist")
+ *       e.g. array('statusCode' => 401, 'data => "password is incorrect")
  *
  *  Invalid users when:
- *     - username doesn't exist in the database
- *     - password is incorrect
- *     - password or username are empty (this is caught above)
+ *     - username doesn't exist in the database (401)
+ *     - password is incorrect (401)
+ *     - user is a member but has not paid to use the QTRA calculaor (403)
  *
- *  note: if a user's expiry-date is in the past, return the result
- *  as normal with the correct expiry-date, the code on the other end
+ *  Note1: If a user's expiry-date is in the past, return the result
+ *  as normal with the correct expiry-date. The code on the other end
  *  will log the user out and display appropriate error messages
  *
- *  use mysql_real_escape_string when needed
+ *  Note2: Use mysql_real_escape_string when needed
  *
  * @param  String username
  * @param  String password
@@ -56,14 +57,14 @@ function validateUser($username, $password) {
     foreach ($mock_database as $record_in_db) {
         if ($record_in_db['user'] == $username AND $record_in_db['password'] == $password) {
             return array(
-                'ok' => true,
+                'statusCode' => 200,
                 'data' => $record_in_db['expirydate']
             );
         }
     }
 
     return array(
-        'ok' => false,
-        'data' => "couldn't log in"
+        'statusCode' => 401,
+        'data' => "incorrect username or password"
     );
 }

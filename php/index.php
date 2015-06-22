@@ -14,11 +14,13 @@ runApp();
  */
 function runApp() {
     $response = checkInput();
-    if ($response['ok'] !== false) {
-        $response = validateUser($response['data']['username'], $response['data']['password']);
+    if ($response['statusCode'] === 200) {
+        $response = validateUser(
+            $response['data']['username'],
+            $response['data']['password']
+        );
         // add QSK to the output
-        if ($response['ok'] !== false) {
-            $response['statusCode'] = 200;
+        if ($response['statusCode'] === 200) {
             $response['qsk'] = convertQSK();
         } else {
             $response['statusCode'] = 401;
@@ -63,23 +65,18 @@ function writeJSON($response) {
             break;
     }
 
-    if ( ! DEBUG) {
-        if ($response['ok'] === false) {
-            $response['data'] = 'error message suppressed';
-        }
-        if ($statusCode != 200) {
-            $response = $statusMessage;
-        }
+    if ( ! DEBUG AND $statusCode != 200) {
+        $response = $statusMessage;
     }
 
-    // success here is what pasre.com requires the response to be
+    // parse.com requires the response to have a 'success' parameter
     $response = array('success' => $response);
     header('Content-type: application/json');
 
     // http_response_code is only supported from PHP 5.4
-    // the other way is using header:
+    // another way is to use header as follows:
     // header($_SERVER['SERVER_PROTOCOL'] . $statusCode . " " . $statusMessage, true, $statusCode);
-    // which doesn't always work depending on the server set-up
+    // but this doesn't always work depending on the server set-up
     //
     http_response_code($statusCode);
 
@@ -116,7 +113,6 @@ function checkInput() {
 
     if ( ! isset($json_data['params'])) {
         return array(
-            'ok' => false,
             'data' => "invalid parameters"
         );
     }
@@ -125,35 +121,30 @@ function checkInput() {
 
     if ( ! isset($json_data['qsk'])) {
         return array(
-            'ok' => false,
             'statusCode' => 400,
             'data' => "no key"
         );
     }
     if ( ! isset($json_data['username'])) {
         return array(
-            'ok' => false,
             'statusCode' => 400,
             'data' => "no username"
         );
     }
     if ( empty($json_data['username'])) {
         return array(
-            'ok' => false,
             'statusCode' => 400,
             'data' => "no username"
         );
     }
     if ( ! isset($json_data['password'])) {
         return array(
-            'ok' => false,
             'statusCode' => 400,
             'data' => "no password"
         );
     }
     if ( empty($json_data['password'])) {
         return array(
-            'ok' => false,
             'statusCode' => 400,
             'data' => "no password"
         );
@@ -162,13 +153,11 @@ function checkInput() {
     // check secret key here
     if ($json_data['qsk'] == convertqsk()) {
         return array(
-            'ok' => true,
             'statusCode' => 200,
             'data' => $json_data
         );
     } else {
         return array(
-            'ok' => false,
             'statusCode' => 400,
             'data' => "invalid key"
         );
@@ -208,7 +197,7 @@ function sanitize($input) {
         if (get_magic_quotes_gpc()) {
             $input = stripslashes($input);
         }
-        $output  = cleanInput($input);
+        $output = cleanInput($input);
     }
     return $output;
 }
