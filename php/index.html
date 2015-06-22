@@ -21,7 +21,7 @@
                 data: formData,
                 success: function(data){
                     data = data.success;
-                    var expirydate = data.expirydate;
+                    var expirydate = data.data;
                     if (data.success === false) {
                         $(".message").css("color", "red")
                         $(".message").text("Error: " + data.data);

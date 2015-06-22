@@ -87,8 +87,8 @@ function runApp() {
         // add QSK to the output
         if ($response['success'] !== false) {
             $response = array_merge(
-                array('qsk' => convertQSK()),
-                array('expirydate' => $response['data'])
+                array('success' => true, 'qsk' => convertQSK()),
+                array('data' => $response['data'])
             );
         }
     }
@@ -102,6 +102,10 @@ function runApp() {
  * @param  String username
  */
 function writeJSON($response) {
+    if ( ! DEBUG AND $response['success'] === false) {
+        $response['data'] = 'error message suppressed';
+    }
+
     $response = array('success' => $response);
     header('Content-type: application/json');
     exit(json_encode($response));
