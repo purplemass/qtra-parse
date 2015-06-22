@@ -1,6 +1,6 @@
 <?PHP
 
-// the config file should be in folder not in the root of the webserver
+// if possible, move these files outside of the root of the webserver
 require_once("api_config.php");
 require_once("api_service.php");
 
