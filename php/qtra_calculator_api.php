@@ -28,6 +28,8 @@ function validateUser($username, $password) {
     // note: if a user's expirydate is in the past, return the result
     // as normal with the corrcet expirydate, the client will log the
     // user out and display error messages
+    //
+    // note2: use mysql_real_escape_string when needed
 
     /*********************************************************************
      * BELOW IS A MOCK-UP OF USER VALIDATION FOR TESTING
@@ -135,7 +137,9 @@ function checkInput() {
     $error = false;
 
     // get json data sent by client
-    $json_data = json_decode(file_get_contents('php://input'), true);
+    $json_data = file_get_contents('php://input');
+    $json_data = sanitize($json_data);
+    $json_data = json_decode($json_data, true);
 
     if ( ! isset($json_data['params'])) return array('success' => false, 'data' => "invalid parameters");
 
@@ -153,4 +157,42 @@ function checkInput() {
     } else {
         return array('success' => false, 'data' => "invalid key");
     }
+}
+
+/**
+ * Cleans input data by removing harmful characters
+ *
+ * @param  value
+ * @return cleaned value
+ */
+function cleanInput($input) {
+    $search = array(
+        '@<script[^>]*?>.*?</script>@si',   // Strip out javascript
+        '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+        '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+        '@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
+    );
+
+    $output = preg_replace($search, '', $input);
+    return $output;
+}
+
+/**
+ * Sanitizes user input for safe insersion into MySQL
+ *
+ * @param  array or value
+ * @return array or value depending on input
+ */
+function sanitize($input) {
+    if (is_array($input)) {
+        foreach ($input as $var=>$val) {
+            $output[$var] = sanitize($val);
+        }
+    } else {
+        if (get_magic_quotes_gpc()) {
+            $input = stripslashes($input);
+        }
+        $output  = cleanInput($input);
+    }
+    return $output;
 }
