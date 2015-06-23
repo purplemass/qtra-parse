@@ -14,21 +14,19 @@
  *       e.g. array('statusCode' => 401, 'data => "password is incorrect")
  *
  *  Invalid users when:
- *     - username doesn't exist in the database (401)
- *     - password is incorrect (401)
- *     - user is a member but has not paid to use the QTRA calculaor (403)
+ *    - username doesn't exist in the database (401)
+ *    - password is incorrect (401)
+ *    - user's expiry-date has passed (403)
+ *    - user is a member but has not paid to use the QTRA calculaor (403)
  *
- *  Note1: If a user's expiry-date is in the past, return the result
- *  as normal with the correct expiry-date. The code on the other end
- *  will log the user out and display appropriate error messages
- *
- *  Note2: Use mysql_real_escape_string when needed
+ *  Note: For extra security, use mysql_real_escape_string on username/password
  *
  * @param  String username
  * @param  String password
  * @return array
  */
-function validateUser($username, $password) {
+function validateUser($username, $password)
+{
     /*********************************************************************
      * BELOW IS A MOCK-UP OF USER VALIDATION FOR TESTING
      * REPLACE THE CODE BELOW WITH YOUR CODE TO ACCESS THE DATABASE
@@ -64,16 +62,26 @@ function validateUser($username, $password) {
         ),
     );
 
-    foreach ($mock_database as $record_in_db) {
-        if ($record_in_db['user'] == $username AND
-                $record_in_db['password'] == $password) {
+    $today = strtotime(date("Y-m-d"));
 
-            if ($record_in_db['can_access_calculator']) {
+    foreach ($mock_database as $record_in_db)
+    {
+        if ($record_in_db['user'] == $username AND
+                $record_in_db['password'] == $password)
+        {
+            $expirydate = $record_in_db['expirydate'];
+
+            if ($record_in_db['can_access_calculator'] AND
+                    (strtotime($expirydate) > $today))
+            {
                 return array(
                     'statusCode' => 200,
-                    'data' => $record_in_db['expirydate']
+                    'data' => $expirydate
                 );
-            } else {
+
+            }
+            else
+            {
                 return array(
                     'statusCode' => 403,
                     'data' => "no access allowed"
