@@ -1,6 +1,6 @@
 Parse.initialize("GIm4OTBES61ztfbUQU4SVbb1rirVsws2k0aGV1c3", "KQ8r1LfoTmmd6OfTpPAPj32doxnP5US2gomGeGr3");
 
-function parseLogin(username, password, listProjects) {
+function parseLogin(username, password, deferred) {
   var data_to_send = {
     'username': username,
     'password': password
@@ -13,24 +13,27 @@ function parseLogin(username, password, listProjects) {
         logIt("parseLogin: could not login");
       } else {
         logIt(result);
-        parseLoginActual(username, password, listProjects);
+        parseLoginActual(username, password, deferred);
       }
     },
     error: function(error) {
+      deferred.reject('Wrong credentials.');
       logIt("parseLogin: got error!");
       logIt(error);
     }
   });
 }
 
-function parseLoginActual(username, password, listProjects) {
+function parseLoginActual(username, password, deferred) {
   Parse.User.logIn(username, password, {
     success: function(result) {
-      if (listProjects) {
-        parseGetProjects();
-      }
+      deferred.resolve('Welcome ' + username + '!');
+      // if (listProjects) {
+      //   parseGetProjects();
+      // }
     },
     error: function(result, error) {
+      deferred.reject('Wrong credentials.');
       response.error(error);
     }
   });
@@ -125,6 +128,6 @@ function logIt(str) {
       logIt(currentUser.attributes);
 */
 
-parseLogin('bob', 'bob', true);
+// parseLogin('bob', 'bob', true);
 // parseLogin('pop', 'pop', true);
 // parseLogin('oliver', 'oliver', true);

@@ -48,7 +48,7 @@ angular.module('qtra.controllers', [])
 
   $scope.logout = function() {
     parseLogout();
-    LoginService.clearUser();
+    // LoginService.clearUser();
   }
 
   $scope.backToLogin = function() {

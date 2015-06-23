@@ -7,14 +7,8 @@ angular.module('qtra.services', [])
       var deferred = $q.defer();
       var promise = deferred.promise;
 
-      // if ( (username == 'bob' && password == 'bob') || (username == 'oliver' && password == 'oliver') ) {
-      if (username == password) {
-        this.setUser(username);
-        parseLogin(username, password);
-        deferred.resolve('Welcome ' + username + '!');
-      } else {
-        deferred.reject('Wrong credentials.');
-      }
+      parseLogin(username, password, deferred);
+
       promise.success = function(fn) {
         promise.then(fn);
         return promise;
@@ -33,16 +27,15 @@ angular.module('qtra.services', [])
       }
     },
     getUser: function() {
-      return $localstorage.get('user');
-    },
-    setUser: function(user) {
-      $localstorage.set('loggedin', "true");
-      $localstorage.set('user', user);
-    },
-    clearUser: function() {
-      $localstorage.set('loggedin', "");
-      $localstorage.set('user', "");
+      console.log("getUser");
+      console.log(Parse.User.current());
+      return Parse.User.current();
+      // return $localstorage.get('user');
     }
+    // clearUser: function() {
+    //   $localstorage.set('loggedin', "");
+    //   $localstorage.set('user', "");
+    // }
   }
 })
 
