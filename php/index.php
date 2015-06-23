@@ -13,16 +13,17 @@ runApp();
  * returnes JSON response
  */
 function runApp() {
-    $response = checkInput();
+    $json_data = checkInput();
+    $response = validateUser(
+        $json_data['data']['username'],
+        $json_data['data']['password']
+    );
+
+    // if user is valid, add qsk to the output for
+    // verification by parse.com
+    //
     if ($response['statusCode'] === 200) {
-        $response = validateUser(
-            $response['data']['username'],
-            $response['data']['password']
-        );
-        // add qsk to the output for verification by parse.com
-        if ($response['statusCode'] === 200) {
-            $response['qsk'] = convertQSK();
-        }
+        $response['qsk'] = convertQSK();
     }
 
     writeJSON($response);
@@ -121,14 +122,16 @@ function checkInput() {
         writeJSON($response);
     }
 
-    if ( ! isset($json_data['username']) OR
-            ! isset($json_data['password'])) {
+    if ( ! isset($json_data['username'])
+        || ! isset($json_data['password'])
+    ) {
         $response['data'] = "no username or password";
         writeJSON($response);
     }
 
-    if ( empty($json_data['username']) OR
-            empty($json_data['password'])) {
+    if ( empty($json_data['username'])
+        || empty($json_data['password'])
+    ) {
         $response['data'] = "no username or password";
         writeJSON($response);
     }

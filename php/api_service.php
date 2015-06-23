@@ -25,8 +25,7 @@
  * @param  String password
  * @return array
  */
-function validateUser($username, $password)
-{
+function validateUser($username, $password) {
     /*********************************************************************
      * BELOW IS A MOCK-UP OF USER VALIDATION FOR TESTING
      * REPLACE THE CODE BELOW WITH YOUR CODE TO ACCESS THE DATABASE
@@ -53,7 +52,7 @@ function validateUser($username, $password)
             'can_access_calculator' => true,
             'expirydate' => '2015-01-01'
         ),
-        // invalid user - should not have access
+        // invalid user - should not have access to calculator
         array(
             'user' => 'invalid',
             'password' => 'invalid',
@@ -64,24 +63,21 @@ function validateUser($username, $password)
 
     $today = strtotime(date("Y-m-d"));
 
-    foreach ($mock_database as $record_in_db)
-    {
-        if ($record_in_db['user'] == $username AND
-                $record_in_db['password'] == $password)
-        {
+    foreach ($mock_database as $record_in_db) {
+        if ($record_in_db['user'] == $username
+            && $record_in_db['password'] == $password
+        ) {
             $expirydate = $record_in_db['expirydate'];
 
-            if ($record_in_db['can_access_calculator'] AND
-                    (strtotime($expirydate) > $today))
-            {
+            if ($record_in_db['can_access_calculator']
+                && (strtotime($expirydate) > $today)
+            ) {
                 return array(
                     'statusCode' => 200,
                     'data' => $expirydate
                 );
 
-            }
-            else
-            {
+            } else {
                 return array(
                     'statusCode' => 403,
                     'data' => "no access allowed"
