@@ -122,6 +122,13 @@ function checkInput()
 
     $jsonData = $jsonData['params'];
 
+    // in production you must set TESTING to false
+    // this is only used for testing with HTML test page
+    //
+    if (TESTING) {
+        $jsonData['qsk'] = convertqsk();
+    }
+
     if (empty($jsonData['qsk'])) {
         $response['data'] = "no key";
         writeJSON($response);
