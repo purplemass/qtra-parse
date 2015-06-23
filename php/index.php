@@ -13,10 +13,10 @@ runApp();
  * returnes JSON response
  */
 function runApp() {
-    $json_data = checkInput();
+    $jsonData = checkInput();
     $response = validateUser(
-        $json_data['data']['username'],
-        $json_data['data']['password']
+        $jsonData['data']['username'],
+        $jsonData['data']['password']
     );
 
     // if user is valid, add qsk to the output for
@@ -107,34 +107,34 @@ function checkInput() {
     $response = array('statusCode' => 400);
 
     // get JSON data sent by client
-    $json_data = sanitize(file_get_contents('php://input'));
-    $json_data = json_decode($json_data, true);
+    $jsonData = sanitize(file_get_contents('php://input'));
+    $jsonData = json_decode($jsonData, true);
 
     // JSON data from parse.com comes in 'params'
-    if (empty($json_data['params'])) {
+    if (empty($jsonData['params'])) {
         $response['data'] = "invalid parameters";
         writeJSON($response);
     }
 
-    $json_data = $json_data['params'];
+    $jsonData = $jsonData['params'];
 
-    if (empty($json_data['qsk'])) {
+    if (empty($jsonData['qsk'])) {
         $response['data'] = "no key";
         writeJSON($response);
     }
 
-    if ( empty($json_data['username'])
-        || empty($json_data['password'])
+    if ( empty($jsonData['username'])
+        || empty($jsonData['password'])
     ) {
         $response['data'] = "no username or password";
         writeJSON($response);
     }
 
     // check secret key here
-    if ($json_data['qsk'] == convertqsk()) {
+    if ($jsonData['qsk'] == convertqsk()) {
         return array(
             'statusCode' => 200,
-            'data' => $json_data
+            'data' => $jsonData
         );
     } else {
         $response['data'] = "invalid key";

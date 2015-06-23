@@ -30,7 +30,7 @@ function validateUser($username, $password) {
      * BELOW IS A MOCK-UP OF USER VALIDATION FOR TESTING
      * REPLACE THE CODE BELOW WITH YOUR CODE TO ACCESS THE DATABASE
      *********************************************************************/
-    $mock_database = array(
+    $mockDatabase = array(
         // valid user - plenty of time
         array(
             'user' => 'oliver',
@@ -63,13 +63,13 @@ function validateUser($username, $password) {
 
     $today = strtotime(date("Y-m-d"));
 
-    foreach ($mock_database as $record_in_db) {
-        if ($record_in_db['user'] == $username
-            && $record_in_db['password'] == $password
+    foreach ($mockDatabase as $recordInDatabase) {
+        if ($recordInDatabase['user'] == $username
+            && $recordInDatabase['password'] == $password
         ) {
-            $expirydate = $record_in_db['expirydate'];
+            $expirydate = $recordInDatabase['expirydate'];
 
-            if ($record_in_db['can_access_calculator']
+            if ($recordInDatabase['can_access_calculator']
                 && (strtotime($expirydate) > $today)
             ) {
                 return array(
