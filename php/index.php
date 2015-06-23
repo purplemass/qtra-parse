@@ -1,8 +1,8 @@
 <?PHP
 
 // if possible, move these files outside of the root of the webserver
-require_once("api_config.php");
-require_once("api_service.php");
+require_once("apiConfig.php");
+require_once("apiService.php");
 
 runApp();
 
