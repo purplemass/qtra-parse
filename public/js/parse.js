@@ -1,15 +1,16 @@
 Parse.initialize("GIm4OTBES61ztfbUQU4SVbb1rirVsws2k0aGV1c3", "KQ8r1LfoTmmd6OfTpPAPj32doxnP5US2gomGeGr3");
 
 function parseLogin(username, password, deferred) {
-  var data_to_send = {
+  var dataToSend = {
     'username': username,
     'password': password
   };
 
-  Parse.Cloud.run('parseLoginCC', data_to_send, {
+  Parse.Cloud.run('parseLoginCC', dataToSend, {
     success: function(result) {
       logIt("parseLogin: success");
       if (result === false) {
+        deferred.reject('Could not login');
         logIt("parseLogin: could not login");
       } else {
         logIt(result);
@@ -17,8 +18,8 @@ function parseLogin(username, password, deferred) {
       }
     },
     error: function(error) {
-      deferred.reject('Wrong credentials.');
-      logIt("parseLogin: got error!");
+      deferred.reject(error);
+      logIt("parseLoginCC");
       logIt(error);
     }
   });
@@ -28,12 +29,10 @@ function parseLoginActual(username, password, deferred) {
   Parse.User.logIn(username, password, {
     success: function(result) {
       deferred.resolve('Welcome ' + username + '!');
-      // if (listProjects) {
-      //   parseGetProjects();
-      // }
     },
-    error: function(result, error) {
-      deferred.reject('Wrong credentials.');
+    error: function(error) {
+      deferred.reject(error);
+      logIt("parseLoginActual");
       response.error(error);
     }
   });
@@ -44,7 +43,7 @@ function parseLogout() {
   logIt("parseLogout: logged out");
 }
 
-function parseGetProjects() {
+function parseGetProjects(deferred) {
   var ProjectObject = Parse.Object.extend("Project");
   var query = new Parse.Query(ProjectObject);
   var user = Parse.User.current();
@@ -57,6 +56,8 @@ function parseGetProjects() {
         var object = results[i];
         logIt(object.get('name'));
       }
+
+      deferred.resolve(results);
 
       // parseAddProject();
       // parseGetProject("jkWGgVrBjx"); // Bob's

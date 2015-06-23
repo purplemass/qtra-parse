@@ -18,13 +18,13 @@ Parse.Cloud.define("parseLoginCC", function(request, response) {
   Parse.Cloud.run('getSecretKeyCC', {}, {
     success: function(result) {
       var qsk = result;
-      var data_to_send = {
+      var dataToSend = {
         'qsk': qsk,
         'username': username,
         'password': password
       };
 
-      Parse.Cloud.run('testLoginWebHook', data_to_send, {
+      Parse.Cloud.run('testLoginWebHook', dataToSend, {
         success: function(result) {
           if (result.qsk === undefined) {
             response.error("missing key");
@@ -38,7 +38,7 @@ Parse.Cloud.define("parseLoginCC", function(request, response) {
             if (expirydate < now) {
               response.error("user expired");
             } else {
-              response.success(result.expirydate);
+              response.success(result.data);
             }
           }
         },

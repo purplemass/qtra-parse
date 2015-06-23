@@ -1,5 +1,19 @@
 angular.module('qtra.services', [])
 
+.service('RedirectService', function($state, LoginService, $ionicHistory) {
+  return {
+    isLoggedIn: function() {
+      if ( ! LoginService.isLoggedIn()) {
+        $state.go('login', false);
+        $ionicHistory.clearHistory();
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+})
+
 .service('LoginService', function($q, $localstorage) {
 
   return {
@@ -20,22 +34,26 @@ angular.module('qtra.services', [])
       return promise;
     },
     isLoggedIn: function() {
-      if ($localstorage.get('loggedin') === "true") {
+      // if ($localstorage.get('loggedin') === "true") {
+      if (Parse.User.current()) {
         return true;
       } else {
         return false;
       }
     },
     getUser: function() {
-      console.log("getUser");
-      console.log(Parse.User.current());
-      return Parse.User.current();
+      var parseUser = Parse.User.current();
+      if (parseUser) {
+        return parseUser.attributes.username;
+      } else {
+        return null;
+      }
       // return $localstorage.get('user');
+    },
+    clearUser: function() {
+      $localstorage.set('loggedin', "");
+      $localstorage.set('user', "");
     }
-    // clearUser: function() {
-    //   $localstorage.set('loggedin', "");
-    //   $localstorage.set('user', "");
-    // }
   }
 })
 
@@ -57,6 +75,22 @@ angular.module('qtra.services', [])
         }
       }
       return null;
+    },
+    parseLoad: function() {
+      var deferred = $q.defer();
+      var promise = deferred.promise;
+
+      parseGetProjects(deferred);
+
+      promise.success = function(fn) {
+        promise.then(fn);
+        return promise;
+      }
+      promise.error = function(fn) {
+        promise.then(null, fn);
+        return promise;
+      }
+      return promise;
     },
     load: function() {
       return $http.get(projectsURL).then(function(response) {
