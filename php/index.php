@@ -110,22 +110,16 @@ function checkInput() {
     $json_data = sanitize(file_get_contents('php://input'));
     $json_data = json_decode($json_data, true);
 
-    if ( ! isset($json_data['params'])) {
+    // JSON data from parse.com comes in 'params'
+    if (empty($json_data['params'])) {
         $response['data'] = "invalid parameters";
         writeJSON($response);
     }
 
     $json_data = $json_data['params'];
 
-    if ( ! isset($json_data['qsk'])) {
+    if (empty($json_data['qsk'])) {
         $response['data'] = "no key";
-        writeJSON($response);
-    }
-
-    if ( ! isset($json_data['username'])
-        || ! isset($json_data['password'])
-    ) {
-        $response['data'] = "no username or password";
         writeJSON($response);
     }
 
