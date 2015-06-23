@@ -25,7 +25,8 @@
  * @param  String password
  * @return array
  */
-function validateUser($username, $password) {
+function validateUser($username, $password)
+{
     /*********************************************************************
      * BELOW IS A MOCK-UP OF USER VALIDATION FOR TESTING
      * REPLACE THE CODE BELOW WITH YOUR CODE TO ACCESS THE DATABASE

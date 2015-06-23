@@ -12,7 +12,8 @@ runApp();
  * runs checks on user input (POST data), runs database service
  * returnes JSON response
  */
-function runApp() {
+function runApp()
+{
     $jsonData = checkInput();
     $response = validateUser(
         $jsonData['data']['username'],
@@ -34,7 +35,8 @@ function runApp() {
  *
  * @param  String username
  */
-function writeJSON($response) {
+function writeJSON($response)
+{
     $statusCode = $response['statusCode'];
     unset($response['statusCode']);
 
@@ -87,7 +89,8 @@ function writeJSON($response) {
  *
  * @return converted QSK
  */
-function convertQSK() {
+function convertQSK()
+{
     $qsk = sha1(QTRA_SECRET_KEY);
     return $qsk;
 }
@@ -103,7 +106,8 @@ function convertQSK() {
  * @return array with 'statusCode' set to 200 and 'data' set
  *         to JSON data otherwise exit with error message
  */
-function checkInput() {
+function checkInput()
+{
     $response = array('statusCode' => 400);
 
     // get JSON data sent by client
@@ -148,7 +152,8 @@ function checkInput() {
  * @param  value
  * @return cleaned value
  */
-function cleanInput($input) {
+function cleanInput($input)
+{
     $search = array(
         '@<script[^>]*?>.*?</script>@si',   // Strip out javascript
         '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
@@ -166,7 +171,8 @@ function cleanInput($input) {
  * @param  array or value
  * @return array or value depending on input
  */
-function sanitize($input) {
+function sanitize($input)
+{
     if (is_array($input)) {
         foreach ($input as $var=>$val) {
             $output[$var] = sanitize($val);
