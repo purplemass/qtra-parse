@@ -2,7 +2,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: './public/',
+    basePath: './',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -11,20 +11,19 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       //Angular source
-      'lib/ionic/js/ionic.bundle.js',
-      'lib/angular-mocks/angular-mocks.js',
-      'lib/angular-local-storage/dist/angular-local-storage.js',
-      'lib/ngCordova/dist/ng-cordova.js',
-      'lib/ionic/js/angular-ui/angular-ui-router.js',
-      'lib/angular-animate/angular-animate.js',
-      'lib/angular-sanitize/angular-sanitize.js',
+      'public/lib/ionic/js/ionic.bundle.min.js',
+      'public/lib/ionic/js/angular/angular.min.js',
+      'public/lib/ionic/js/angular/angular-animate.min.js',
+      'public/lib/ionic/js/angular/angular-sanitize.min.js',
+      'public/lib/ionic/js/angular-ui/angular-ui-router.min.js',
+      'bower_components/angular-mocks/angular-mocks.js',
       //App code
-      'js/*.js',
-      'js/controllers/*.js',
-      'js/services/*.js',
-
+      'public/js/*.js',
+      'public/js/controllers.js',
+      'public/js/services.js',
+      'public/js/utils.js',
       //Test files
-      'test/controllers/*.js'
+      'public/test/*.js'
     ],
 
     // list of files to exclude
