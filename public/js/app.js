@@ -24,9 +24,19 @@ angular.module('qtraApp', [
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Caching:
-  // this line totally disables caching
+  // This line totally disables caching:
+  //
   // $ionicConfigProvider.views.maxCache(0);
-  // you can disable caching for an individual route: cache: false
+  //
+  // You can also disable caching for an individual route by
+  // adding "cache: false" to its state definition below or by adding
+  //
+  // $scope.$on('$ionicView.enter', function() {
+  //   console.log('code to run each time view is entered');
+  // });
+  //
+  // to its controller
+
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
