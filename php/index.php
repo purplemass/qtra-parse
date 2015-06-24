@@ -53,6 +53,10 @@ function writeJSON($response)
             $statusMessage = "Unauthorized";
             break;
 
+        case 402:
+            $statusMessage = "Payment Required";
+            break;
+
         case 403:
             $statusMessage = "Forbidden";
             break;
