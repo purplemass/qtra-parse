@@ -1,4 +1,6 @@
-angular.module('qtra.services', [])
+'use strict';
+
+angular.module('qtraApp.services', [])
 
 .service('RedirectService', function($state, LoginService, $ionicHistory) {
   return {

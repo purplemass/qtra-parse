@@ -1,3 +1,5 @@
+'use strict';
+
 Parse.initialize("GIm4OTBES61ztfbUQU4SVbb1rirVsws2k0aGV1c3", "KQ8r1LfoTmmd6OfTpPAPj32doxnP5US2gomGeGr3");
 
 function parseLogin(username, password, deferred) {

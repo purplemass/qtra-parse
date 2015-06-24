@@ -1,9 +1,13 @@
-angular.module('qtra.controllers', [])
+'use strict';
+
+angular.module('qtraApp.controllers', [])
 
 .controller('LoginController', function($scope, $state, LoginService, $ionicPopup, $ionicHistory) {
+  console.log('LoginController');
   $scope.data = {};
 
   var logUserIn = function() {
+    console.log('logUserIn');
     $scope.loggeduser = LoginService.getUser();
 
     // must watch this!
@@ -62,6 +66,7 @@ angular.module('qtra.controllers', [])
 })
 
 .controller('ProjectsController', function($scope, RedirectService, ProjectService) {
+  console.log('ProjectsController');
   if ( ! RedirectService.isLoggedIn()) return false;
 
   ProjectService.parseLoad().then(function(promise) {

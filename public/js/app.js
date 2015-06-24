@@ -1,4 +1,11 @@
-angular.module('qtraApp', ['ionic', 'ionic.utils', 'qtra.controllers', 'qtra.services'])
+'use strict';
+
+angular.module('qtraApp', [
+  'ionic',
+  'ionic.utils',
+  'qtraApp.controllers',
+  'qtraApp.services']
+)
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -15,6 +22,11 @@ angular.module('qtraApp', ['ionic', 'ionic.utils', 'qtra.controllers', 'qtra.ser
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
+
+  // Caching:
+  // this line totally disables caching
+  // $ionicConfigProvider.views.maxCache(0);
+  // you can disable caching for an individual route: cache: false
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -49,6 +61,7 @@ angular.module('qtraApp', ['ionic', 'ionic.utils', 'qtra.controllers', 'qtra.ser
   // Each tab has its own nav history stack:
 
   .state('tab.projects', {
+      cache: false,
       url: '/projects',
       views: {
         'tab-projects': {
