@@ -91,7 +91,7 @@ function writeJSON($response)
  */
 function convertQSK()
 {
-    $qsk = sha1(QTRA_SECRET_KEY);
+    $qsk = sha1(QTRA_SECRET_KEY . date('Y-m-d'));
     return $qsk;
 }
 

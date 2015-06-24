@@ -1,9 +1,14 @@
+'use strict';
+
 Parse.Cloud.define("getSecretKeyCC", function(request, response) {
   var crypto = require('crypto');
   var shasum = crypto.createHash('sha1');
 
   Parse.Config.get().then(function(config) {
     var qsk = config.get("qtraSecretKey");
+    var today = new Date();
+    today = today.toISOString().substring(0, 10);
+    qsk = qsk + "" + today;
     qsk = crypto.createHash('sha1').update(qsk).digest("hex");
     response.success(qsk);
   }, function(error) {
