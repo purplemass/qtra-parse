@@ -58,7 +58,7 @@ angular.module('qtraApp', [
   .state('logout', {
     url: '/logout',
     templateUrl: 'templates/logout.html',
-    controller: 'LoginController'
+    controller: 'LogoutController'
   })
 
   // setup an abstract state for the tabs directive
@@ -104,7 +104,7 @@ angular.module('qtraApp', [
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
-        controller: 'LoginController'
+        controller: 'AccountController'
       }
     }
   });

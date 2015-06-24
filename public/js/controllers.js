@@ -50,24 +50,11 @@ angular.module('qtraApp.controllers', [])
       });
     });
   }
-
-  $scope.logout = function() {
-    parseLogout();
-  }
-
-  $scope.backToLogin = function() {
-    $ionicHistory.nextViewOptions({
-      disableAnimate: true,
-      disableBack: true
-    });
-    $state.go('login', false);
-    $ionicHistory.clearHistory();
-  }
 })
 
 .controller('ProjectsController', function($scope, RedirectService, ProjectService) {
-  console.log('ProjectsController');
   if ( ! RedirectService.isLoggedIn()) return false;
+  console.log('ProjectsController');
 
   ProjectService.parseLoad().then(function(promise) {
     $scope.projects = promise;
@@ -80,6 +67,7 @@ angular.module('qtraApp.controllers', [])
 
 .controller('ProjectDetailController', function($scope, $stateParams, RedirectService, ProjectService) {
   if ( ! RedirectService.isLoggedIn()) return false;
+  console.log('ProjectDetailController');
 
   parseGetProjects();
   $scope.project = ProjectService.get($stateParams.projectId);
@@ -87,7 +75,30 @@ angular.module('qtraApp.controllers', [])
 
 .controller('TreeDetailController', function($scope, $stateParams, RedirectService, ProjectService) {
   if ( ! RedirectService.isLoggedIn()) return false;
+  console.log('TreeDetailController');
 
   $scope.project = ProjectService.get($stateParams.projectId);
   $scope.tree = $scope.project.trees[$stateParams.treeId];
 })
+
+.controller('AccountController', function($scope, $state, RedirectService, $ionicPopup, $ionicHistory) {
+  if ( ! RedirectService.isLoggedIn()) return false;
+  console.log('AccountController');
+
+  $scope.logout = function() {
+    parseLogout();
+  }
+})
+
+.controller('LogoutController', function($scope, $state, RedirectService, $ionicPopup, $ionicHistory) {
+  console.log('LogoutController');
+
+  $scope.backToLogin = function() {
+    $ionicHistory.nextViewOptions({
+      disableAnimate: true,
+      disableBack: true
+    });
+    $state.go('login', false);
+    $ionicHistory.clearHistory();
+  }
+});

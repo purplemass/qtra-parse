@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('ionic.utils', [])
 
 .factory('$localstorage', ['$window', function($window) {
