@@ -12,18 +12,16 @@ module.exports = function(config) {
     files: [
       //Angular source
       'public/lib/ionic/js/ionic.bundle.min.js',
-      'public/lib/ionic/js/angular/angular.min.js',
+      // 'public/lib/ionic/js/angular/angular.min.js',
       'public/lib/ionic/js/angular/angular-animate.min.js',
       'public/lib/ionic/js/angular/angular-sanitize.min.js',
       'public/lib/ionic/js/angular-ui/angular-ui-router.min.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'public/lib/parse-1.4.2.min.js',
       //App code
       'public/js/*.js',
-      'public/js/controllers.js',
-      'public/js/services.js',
-      'public/js/utils.js',
       //Test files
-      'public/test/*.js'
+      'public/js/**/*.tests.js'
     ],
 
     // list of files to exclude
@@ -60,6 +58,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: true
   })
 }
