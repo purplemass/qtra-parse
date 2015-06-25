@@ -6,15 +6,23 @@ angular.module('qtraApp.controllers', [])
   console.log('LoginController');
   $scope.data = {};
 
+  var goToProjects = function() {
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      });
+      $state.go('tab.projects');
+      $ionicHistory.clearHistory();
+  }
+
+  if (LoginService.isLoggedIn()) {
+    goToProjects();
+  }
+
   $scope.login = function() {
     LoginService.loginUser($scope.data.username, $scope.data.password)
       .success(function(data) {
-        $ionicHistory.nextViewOptions({
-          disableAnimate: true,
-          disableBack: true
-        });
-        $state.go('tab.projects');
-        $ionicHistory.clearHistory();
+        goToProjects();
       })
       .error(function(data) {
         var alertPopup = $ionicPopup.alert({
