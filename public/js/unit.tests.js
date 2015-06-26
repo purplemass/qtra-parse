@@ -7,9 +7,8 @@ describe("LoginController Unit Tests", function () {
     beforeEach(function () {
         module('qtraApp');
 
-        inject(function ($rootScope, $controller, $q, _$timeout_) {
+        inject(function ($rootScope, $controller) {
             $scope = $rootScope.$new();
-            $timeout = _$timeout_;
 
             ctrl = $controller('LoginController', {
                 $scope: $scope
