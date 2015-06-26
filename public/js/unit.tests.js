@@ -2,7 +2,7 @@
 
 describe("LoginController Unit Tests", function () {
 
-    var $scope, ctrl, $timeout, $timeout, $http; //, $location;
+    var ctrl, $scope, $timeout;
 
     beforeEach(function () {
         module('qtraApp');
@@ -23,13 +23,13 @@ describe("LoginController Unit Tests", function () {
 
 });
 
-describe('qtraApp.controllers module', function() {
+describe('qtraApp.controllers', function() {
 
   beforeEach(module('qtraApp'));
 
   describe('LoginController', function(){
 
-    it('should be defined', inject(function($controller, $rootScope) {
+    it('should be defined', inject(function($rootScope, $controller) {
       var $scope = $rootScope.$new();
       var ctrl = $controller('LoginController', {$scope: $scope});
       expect(ctrl).toBeDefined();
@@ -38,3 +38,21 @@ describe('qtraApp.controllers module', function() {
   });
 
 });
+
+describe('LoginController', function() {
+    var scope;
+
+    beforeEach(angular.mock.module('qtraApp'));
+
+    beforeEach(angular.mock.inject(function($rootScope, $controller){
+        scope = $rootScope.$new();
+        $controller('LoginController', {$scope: scope});
+    }));
+
+    it('should have variable data', function(){
+        expect(scope.data).toBeDefined();
+    });
+
+});
+
+// http://www.tuesdaydeveloper.com/2013/06/angularjs-testing-with-karma-and-jasmine/
