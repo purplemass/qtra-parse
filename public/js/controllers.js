@@ -1,28 +1,17 @@
 'use strict';
 
-angular.module('qtraApp.controllers', [])
-
-.controller('LoginController', function($scope, $state, LoginService, $ionicPopup, $ionicHistory) {
+var LoginController = function($scope, $changeState, LoginService, $ionicPopup) {
   console.log('LoginController');
   $scope.data = {};
 
-  var goToProjects = function() {
-      $ionicHistory.nextViewOptions({
-        disableAnimate: true,
-        disableBack: true
-      });
-      $state.go('tab.projects');
-      $ionicHistory.clearHistory();
-  }
-
   if (LoginService.isLoggedIn()) {
-    goToProjects();
+    $changeState.go('tab.projects');
   }
 
   $scope.login = function() {
     LoginService.loginUser($scope.data.username, $scope.data.password)
       .success(function(data) {
-        goToProjects();
+        $changeState.go('tab.projects');
       })
       .error(function(data) {
         var alertPopup = $ionicPopup.alert({
@@ -31,9 +20,12 @@ angular.module('qtraApp.controllers', [])
       });
     });
   }
-})
+}
 
-.controller('ProjectsController', function($scope, RedirectService, ProjectService) {
+LoginController.$inject = ['$scope','$changeState','LoginService','$ionicPopup'];
+
+
+var ProjectsController = function($scope, RedirectService, ProjectService) {
   if ( ! RedirectService.isLoggedIn()) return false;
   console.log('ProjectsController');
 
@@ -44,25 +36,34 @@ angular.module('qtraApp.controllers', [])
   $scope.remove = function(project) {
     ProjectService.remove(project);
   }
-})
+}
 
-.controller('ProjectDetailController', function($scope, $stateParams, RedirectService, ProjectService) {
+ProjectsController.$inject = ['$scope','RedirectService','ProjectService']
+
+
+var ProjectDetailController = function($scope, $stateParams, RedirectService, ProjectService) {
   if ( ! RedirectService.isLoggedIn()) return false;
   console.log('ProjectDetailController');
 
   parseGetProjects();
   $scope.project = ProjectService.get($stateParams.projectId);
-})
+}
 
-.controller('TreeDetailController', function($scope, $stateParams, RedirectService, ProjectService) {
+ProjectDetailController.$inject = ['$scope','$stateParams','RedirectService','ProjectService']
+
+
+var TreeDetailController = function($scope, $stateParams, RedirectService, ProjectService) {
   if ( ! RedirectService.isLoggedIn()) return false;
   console.log('TreeDetailController');
 
   $scope.project = ProjectService.get($stateParams.projectId);
   $scope.tree = $scope.project.trees[$stateParams.treeId];
-})
+}
 
-.controller('AccountController', function($scope, $state, RedirectService, LoginService) {
+TreeDetailController.$inject = ['$scope', '$stateParams', 'RedirectService', 'ProjectService']
+
+
+var AccountController = function($scope, RedirectService, LoginService) {
   if ( ! RedirectService.isLoggedIn()) return false;
   console.log('AccountController');
 
@@ -73,20 +74,30 @@ angular.module('qtraApp.controllers', [])
   $scope.logout = function() {
     parseLogout();
   }
-})
+}
 
-.controller('LogoutController', function($scope, $state, RedirectService, $ionicPopup, $ionicHistory) {
+AccountController.$inject = ['$scope', 'RedirectService', 'LoginService']
+
+
+var LogoutController = function($scope, $changeState) {
   console.log('LogoutController');
 
   $scope.backToLogin = function() {
-    $ionicHistory.nextViewOptions({
-      disableAnimate: true,
-      disableBack: true
-    });
-    $state.go('login', false);
-    $ionicHistory.clearHistory();
+    $changeState.go('login');
   }
-});
+}
+
+LogoutController.$inject = ['$scope', '$changeState'];
+
+
+angular
+  .module('qtraApp.controllers', [])
+  .controller('LoginController', LoginController)
+  .controller('ProjectsController', ProjectsController)
+  .controller('ProjectDetailController', ProjectDetailController)
+  .controller('TreeDetailController', TreeDetailController)
+  .controller('AccountController', AccountController)
+  .controller('LogoutController', LogoutController)
 
 /*
 Check current url:
@@ -106,4 +117,7 @@ Watch for a scope change:
         $scope.loggeduser = newVal;
       }
     )
+
+Injection annotation:
+http://toddmotto.com/angular-js-dependency-injection-annotation-process/
 */
