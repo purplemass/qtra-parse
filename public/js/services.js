@@ -12,7 +12,7 @@ var RedirectService = function($changeState, LoginService) {
     }
   }
 }
-RedirectService.$inject = ['$changeState', 'LoginService']
+RedirectService.$inject = ['$changeState', 'LoginService'];
 
 
 var LoginService = function($q, $localstorage) {
@@ -56,7 +56,7 @@ var LoginService = function($q, $localstorage) {
     }
   }
 }
-LoginService.$inject = ['$q', '$localstorage']
+LoginService.$inject = ['$q', '$localstorage'];
 
 
 var ProjectService = function($q, $http) {
@@ -109,7 +109,7 @@ var ProjectService = function($q, $http) {
     }
   };
 }
-ProjectService.$inject = ['$q', '$http']
+ProjectService.$inject = ['$q', '$http'];
 
 
 angular

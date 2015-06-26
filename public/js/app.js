@@ -7,7 +7,7 @@ angular.module('qtraApp', [
   'qtraApp.utils'
 ])
 
-.run(function($ionicPlatform) {
+.run(['$ionicPlatform', function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,9 +19,9 @@ angular.module('qtraApp', [
       StatusBar.styleLightContent();
     }
   });
-})
+}])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
   // Caching:
   // This line totally disables caching:
@@ -112,4 +112,4 @@ angular.module('qtraApp', [
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 
-});
+}]);

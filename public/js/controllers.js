@@ -36,7 +36,7 @@ var ProjectsController = function($scope, RedirectService, ProjectService) {
     ProjectService.remove(project);
   }
 }
-ProjectsController.$inject = ['$scope','RedirectService','ProjectService']
+ProjectsController.$inject = ['$scope','RedirectService','ProjectService'];
 
 
 var ProjectDetailController = function($scope, $stateParams, RedirectService, ProjectService) {
@@ -46,7 +46,7 @@ var ProjectDetailController = function($scope, $stateParams, RedirectService, Pr
   parseGetProjects();
   $scope.project = ProjectService.get($stateParams.projectId);
 }
-ProjectDetailController.$inject = ['$scope','$stateParams','RedirectService','ProjectService']
+ProjectDetailController.$inject = ['$scope','$stateParams','RedirectService','ProjectService'];
 
 
 var TreeDetailController = function($scope, $stateParams, RedirectService, ProjectService) {
@@ -71,7 +71,7 @@ var AccountController = function($scope, RedirectService, LoginService) {
     parseLogout();
   }
 }
-AccountController.$inject = ['$scope', 'RedirectService', 'LoginService']
+AccountController.$inject = ['$scope', 'RedirectService', 'LoginService'];
 
 
 var LogoutController = function($scope, $changeState) {
