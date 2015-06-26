@@ -21,7 +21,6 @@ var LoginController = function($scope, $changeState, LoginService, $ionicPopup) 
     });
   }
 }
-
 LoginController.$inject = ['$scope','$changeState','LoginService','$ionicPopup'];
 
 
@@ -37,7 +36,6 @@ var ProjectsController = function($scope, RedirectService, ProjectService) {
     ProjectService.remove(project);
   }
 }
-
 ProjectsController.$inject = ['$scope','RedirectService','ProjectService']
 
 
@@ -48,7 +46,6 @@ var ProjectDetailController = function($scope, $stateParams, RedirectService, Pr
   parseGetProjects();
   $scope.project = ProjectService.get($stateParams.projectId);
 }
-
 ProjectDetailController.$inject = ['$scope','$stateParams','RedirectService','ProjectService']
 
 
@@ -59,7 +56,6 @@ var TreeDetailController = function($scope, $stateParams, RedirectService, Proje
   $scope.project = ProjectService.get($stateParams.projectId);
   $scope.tree = $scope.project.trees[$stateParams.treeId];
 }
-
 TreeDetailController.$inject = ['$scope', '$stateParams', 'RedirectService', 'ProjectService']
 
 
@@ -75,7 +71,6 @@ var AccountController = function($scope, RedirectService, LoginService) {
     parseLogout();
   }
 }
-
 AccountController.$inject = ['$scope', 'RedirectService', 'LoginService']
 
 
@@ -86,7 +81,6 @@ var LogoutController = function($scope, $changeState) {
     $changeState.go('login');
   }
 }
-
 LogoutController.$inject = ['$scope', '$changeState'];
 
 

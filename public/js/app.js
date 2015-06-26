@@ -2,10 +2,10 @@
 
 angular.module('qtraApp', [
   'ionic',
-  'ionic.utils',
   'qtraApp.controllers',
-  'qtraApp.services']
-)
+  'qtraApp.services',
+  'qtraApp.utils'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

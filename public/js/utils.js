@@ -1,8 +1,6 @@
 'use strict';
 
-angular.module('ionic.utils', [])
-
-.factory('$localstorage', ['$window', function($window) {
+var $localstorage = function($window) {
   return {
     set: function(key, value) {
       $window.localStorage[key] = value;
@@ -17,18 +15,26 @@ angular.module('ionic.utils', [])
       return JSON.parse($window.localStorage[key] || '{}');
     }
   }
-}])
+}
+$localstorage.$inject = ['$window'];
 
-.factory('$changeState', ['$state', '$ionicHistory', function($state, $ionicHistory) {
+
+var $changeState = function($state, $ionicHistory) {
   return {
-    go: function() {
-      console.log('changeState');
+    go: function(location) {
       $ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true
       });
-      $state.go('tab.projects');
+      $state.go(location);
       $ionicHistory.clearHistory();
     }
   }
-}]);
+}
+$localstorage.$inject = ['$state', '$ionicHistory'];
+
+
+angular
+  .module('qtraApp.utils', [])
+  .factory('$localstorage', $localstorage)
+  .factory('$changeState', $changeState)
