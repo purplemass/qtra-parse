@@ -1,8 +1,6 @@
 'use strict';
 
-angular.module('qtraApp.services', [])
-
-.service('RedirectService', function($changeState, LoginService) {
+var RedirectService = function($changeState, LoginService) {
   return {
     isLoggedIn: function() {
       if ( ! LoginService.isLoggedIn()) {
@@ -13,9 +11,11 @@ angular.module('qtraApp.services', [])
       }
     }
   }
-})
+}
+RedirectService.$inject = ['$changeState', 'LoginService']
 
-.service('LoginService', function($q, $localstorage) {
+
+var LoginService = function($q, $localstorage) {
   return {
     loginUser: function(username, password) {
       var deferred = $q.defer();
@@ -55,9 +55,11 @@ angular.module('qtraApp.services', [])
       $localstorage.set('user', "");
     }
   }
-})
+}
+LoginService.$inject = ['$q', '$localstorage']
 
-.service('ProjectService', function($q, $http) {
+
+var ProjectService = function($q, $http) {
   var projectsURL = 'js/data/projects.json';
   var projects = [];
 
@@ -106,4 +108,12 @@ angular.module('qtraApp.services', [])
       });
     }
   };
-});
+}
+ProjectService.$inject = ['$q', '$http']
+
+
+angular
+  .module('qtraApp.services', [])
+  .service('RedirectService', RedirectService)
+  .service('LoginService', LoginService)
+  .service('ProjectService', ProjectService)
