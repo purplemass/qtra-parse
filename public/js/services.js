@@ -2,12 +2,11 @@
 
 angular.module('qtraApp.services', [])
 
-.service('RedirectService', function($state, LoginService, $ionicHistory) {
+.service('RedirectService', function($changeState, LoginService) {
   return {
     isLoggedIn: function() {
       if ( ! LoginService.isLoggedIn()) {
-        $state.go('login', false);
-        $ionicHistory.clearHistory();
+        $changeState.go('login');
         return false;
       } else {
         return true;
@@ -17,7 +16,6 @@ angular.module('qtraApp.services', [])
 })
 
 .service('LoginService', function($q, $localstorage) {
-
   return {
     loginUser: function(username, password) {
       var deferred = $q.defer();

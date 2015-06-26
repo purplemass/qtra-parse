@@ -17,4 +17,18 @@ angular.module('ionic.utils', [])
       return JSON.parse($window.localStorage[key] || '{}');
     }
   }
+}])
+
+.factory('$changeState', ['$state', '$ionicHistory', function($state, $ionicHistory) {
+  return {
+    go: function() {
+      console.log('changeState');
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      });
+      $state.go('tab.projects');
+      $ionicHistory.clearHistory();
+    }
+  }
 }]);
